@@ -7,10 +7,10 @@ import zipfile
 import sys
 
 
-def brutforce(zip_name, worlist_name):
+def brutforce(zip_name, worlist_name, word_size):
     print("===================================")
     print("Brutforce lauching...")
-
+    
     # Open file and remove `\n`
     wordlist_aray=[]
     with open(worlist_name) as wordlist:
@@ -23,16 +23,17 @@ def brutforce(zip_name, worlist_name):
     # Calcul number of possibilities
     possibilities=0
     n_words = len(wordlist_aray)
-    for i in range(1, len(wordlist_aray) + 1):
+    for i in range(1, int(word_size) + 1):
         possibilities=possibilities + (n_words ** i)
     print("Total passwords to test:", possibilities)
     pbar = tqdm(total=possibilities)
 
     # Go go go
-    for i in range(1, len(wordlist_aray)+1):
+    for i in range(1, int(word_size)+1):
         for attempt in product(wordlist_aray, repeat=i):
             value = ''.join(attempt)
             pbar.update()
+            print(value)
             try:
                 zip_file.extractall(pwd=bytes(value,'utf-8'))
             except:
@@ -46,4 +47,4 @@ def brutforce(zip_name, worlist_name):
     pbar.close()
     return
 
-brutforce(sys.argv[1], sys.argv[2])
+brutforce(sys.argv[1], sys.argv[2], sys.argv[3])
